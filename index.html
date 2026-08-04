@@ -32,11 +32,15 @@
     transition:background .25s ease}
   header.theme-dark{background:var(--dark);mix-blend-mode:normal;color:var(--cream)}
   header.theme-light{background:var(--cream);mix-blend-mode:normal;color:var(--ink)}
-  header .logo{font-weight:700;font-size:22px;letter-spacing:-0.03em}
+  header .logo{height:22px;width:auto;display:block}
   header nav{display:flex;gap:22px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase}
   header nav a{color:#fff;text-decoration:none;opacity:.85}
   header.theme-dark nav a{color:var(--cream)}
   header.theme-light nav a{color:var(--ink)}
+  /* Logo é a versão branca (só arte que temos) — sobre o header claro
+     (Parceiros, footer) ela ficaria quase invisível no creme, então
+     inverte pra ink em vez de precisar de um segundo arquivo. */
+  header.theme-light .logo{filter:invert(1)}
 
   /* Botão hambúrguer: some no desktop (nav normal aparece), some no mobile
      o nav vira esse botão. As barrinhas usam currentColor, então acompanham
@@ -284,7 +288,7 @@
 </head>
 <body>
 <header>
-  <div class="logo">nosso</div>
+  <img class="logo" src="assets/logo-nosso-branco.avif" alt="Nosso" />
   <nav><a href="index.html">Home</a><a href="programacao.html">Programação</a><a href="informacoes.html">Informações</a><a href="ingressos.html">Compre seus ingressos</a></nav>
   <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
