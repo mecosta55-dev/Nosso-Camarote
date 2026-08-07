@@ -32,6 +32,7 @@
     transition:background .25s ease}
   header.theme-dark{background:var(--dark);mix-blend-mode:normal;color:var(--cream)}
   header.theme-light{background:var(--cream);mix-blend-mode:normal;color:var(--ink)}
+  header .logo-link{display:block;line-height:0}
   header .logo{height:22px;width:auto;display:block}
   header nav{display:flex;gap:22px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase}
   header nav a{color:#fff;text-decoration:none;opacity:.85}
@@ -71,7 +72,7 @@
   @media(min-width:641px){.mobile-nav{display:none}}
 
   /* ---------- HERO ---------- */
-  .hero-wrap{position:relative;height:360vh;background:var(--dark)}
+  .hero-wrap{position:relative;height:288vh;background:var(--dark)}
   .hero-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden}
   .hero-track{position:absolute;inset:0 auto 0 0;display:flex;align-items:center;height:100%;
     gap:24px;padding-left:44vw;padding-right:12vw;will-change:transform}
@@ -128,23 +129,22 @@
   .lu-panels-viewport{flex:1;overflow:hidden;position:relative;margin-top:14px;touch-action:pan-y}
   .lu-panels{display:flex;height:100%;will-change:flex-basis}
   .lu-panel{position:relative;flex:0 0 90px;height:100%;overflow:hidden;cursor:pointer;
-    border-right:1px solid rgba(43,43,41,.18);transition:flex-basis .55s cubic-bezier(.22,1,.36,1)}
-  .lu-panel:last-child{border-right:none}
+    transition:flex-basis .55s cubic-bezier(.22,1,.36,1)}
   .lu-panel.active{cursor:pointer}
   /* background-position ajustado por artista: o corte automático "center" ignorava
      onde o rosto ficava dentro da foto, cortando a cabeça quando o card muda de
      proporção (bem largo no desktop, estreito e alto no mobile). Cada foto tem seu
      próprio ponto vertical de foco pra manter o artista sempre visível. */
-  .lu-panel .ph{position:absolute;inset:0;background-size:cover;background-position:center;
+  .lu-panel .ph{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;
     transition:filter .4s ease}
   /* Um pouco de blur (não escurecer) nas fotos das tiras estreitas, só pra dar
      contraste ao nome que agora fica sempre visível ali. scale compensa a borda
      que o blur suaviza, e overflow:hidden do .lu-panel esconde o excesso. */
   .lu-panel:not(.active) .ph.photo{filter:blur(3px);transform:scale(1.08)}
-  .c1 .ph{background:linear-gradient(160deg,#20309022,#AEB6E8)}
-  .c2 .ph{background:linear-gradient(160deg,#E04A2C33,#F0A6BC)}
-  .c3 .ph{background:linear-gradient(160deg,#C8DCA8,#20309044)}
-  .c4 .ph{background:linear-gradient(160deg,#AEB6E8,#0A0A0A55)}
+  .c1 .ph{background-image:linear-gradient(160deg,#20309022,#AEB6E8)}
+  .c2 .ph{background-image:linear-gradient(160deg,#E04A2C33,#F0A6BC)}
+  .c3 .ph{background-image:linear-gradient(160deg,#C8DCA8,#20309044)}
+  .c4 .ph{background-image:linear-gradient(160deg,#AEB6E8,#0A0A0A55)}
   .lu-panel.c1 .ph.photo{background-image:url('assets/lineup-0502-neyo.jpg');background-position:center 82%}
   .lu-panel.c2 .ph.photo{background-image:url('assets/lineup-0602-joaogomes.jpg');background-position:center 58%}
   .lu-panel.c3 .ph.photo{background-image:url('assets/lineup-0702-luisasonza.jpg');background-position:center 50%}
@@ -152,7 +152,7 @@
   .lu-panel.c5 .ph.photo{background-image:url('assets/lineup-0902-revelacao.jpg');background-position:center 28%}
   .lu-panel.c6 .ph.photo{background-image:url('assets/lineup-1402-anitta.jpg');background-position:center 42%}
   .lu-panel .overlay{background:linear-gradient(180deg,transparent 40%,rgba(10,10,10,.75))}
-  .c6 .ph{background:linear-gradient(160deg,#C8DCA8,#E04A2C55)}
+  .c6 .ph{background-image:linear-gradient(160deg,#C8DCA8,#E04A2C55)}
   .lu-panel .pidx{position:absolute;left:12px;bottom:12px;font-size:11px;letter-spacing:.18em;color:var(--ink);opacity:.65;white-space:nowrap}
   .lu-panel.active .pidx{display:none}
   /* Nome do artista sempre visível, na mesma opacidade/tamanho em qualquer
@@ -160,9 +160,17 @@
      aparecia e os outros artistas ficavam escondidos. */
   .lu-panel .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;opacity:1;padding:0 16px}
-  .lu-panel .overlay .kick{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);opacity:.85;margin-bottom:8px;
+  /* O box com fundo radial atrás do texto (versão anterior) ficava com uma
+     borda perceptível mesmo dissolvendo a opacidade — a elipse do gradiente
+     não cobre os cantos do container, então sobrava um contorno reto visível
+     atrás do texto. Trocado por text-shadow em cada texto: mais sutil, sem
+     nenhuma forma/contorno, só um leve reforço de contraste sobre a foto. */
+  .lu-panel .overlay-text{display:flex;flex-direction:column;align-items:center;max-width:100%}
+  .lu-panel .overlay .kick{font-weight:700;font-size:clamp(17.6px,3.2vw,35.2px);letter-spacing:-0.02em;
+    text-transform:none;color:var(--cream);opacity:.85;margin-bottom:6px;text-shadow:0 2px 16px rgba(0,0,0,.75);
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .lu-panel .overlay .name{font-weight:700;font-size:clamp(22px,4vw,44px);letter-spacing:-0.02em;color:var(--cream);
+    text-shadow:0 2px 16px rgba(0,0,0,.75);
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   /* Lista de atrações de apoio só no painel aberto — nome+data do headliner já
      ficam sempre visíveis (mesmo tamanho/opacidade em qualquer painel), mas os
@@ -172,7 +180,7 @@
   .lu-panel:not(.active) .overlay .support{display:none}
   .lu-panel .overlay .support{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:4px}
   .lu-panel .overlay .support span{font-weight:700;font-size:clamp(17.6px,3.2vw,35.2px);letter-spacing:-0.02em;
-    color:var(--cream);opacity:.85;white-space:nowrap}
+    color:var(--cream);opacity:.85;white-space:nowrap;text-shadow:0 2px 16px rgba(0,0,0,.75)}
 
   /* Selo "Comprar ingressos": só aparece no painel ativo, que agora é
      clicável e leva pra compra daquele dia — o clique nas tiras estreitas
@@ -180,7 +188,7 @@
   .lu-panel:not(.active) .overlay .buy-hint{display:none}
   .lu-panel .overlay .buy-hint{margin-top:18px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--cream);border:1px solid rgba(220,219,210,.4);border-radius:999px;padding:9px 20px;
-    white-space:nowrap}
+    white-space:nowrap;text-shadow:0 2px 16px rgba(0,0,0,.75)}
 
   .lu-corner{position:absolute;bottom:10px;font-size:clamp(20px,2.6vw,32px);font-weight:700;color:var(--ink);z-index:2}
   .lu-corner.l{left:clamp(14px,3vw,30px)} .lu-corner.r{right:clamp(14px,3vw,30px)}
@@ -194,10 +202,6 @@
   #luPlus{font-weight:700;font-size:clamp(3rem,15vw,11rem);color:var(--cream);display:inline-block;transform-origin:50% 50%}
 
   /* ---------- DIFERENCIAIS (pílulas empilham fixas no scroll) ---------- */
-  /* Teste: seção escura (era creme) — mesma estrutura, só invertendo as cores
-     base (fundo dark/texto cream) e a opacidade dos contornos, que eram
-     pensados pra contraste sobre creme (rgba do --ink) e ficavam quase
-     invisíveis sobre dark. */
   .dif-wrap{background:var(--dark);color:var(--cream)}
   /* Sticky também — trava logo abaixo do header e fica ali (o "momento"
      pedido: título + primeiro card abertos) enquanto o resto da pilha
@@ -209,14 +213,24 @@
 
   /* Cada .dif-item INTEIRO fica sticky, com o topo deslocado 64px por índice —
      é isso que faz o de baixo cobrir o card do de cima, deixando só a pílula
-     dele visível pra sempre (empilhamento real, sem JS). A altura agora é a
-     MESMA em todos (--dif-base): só o "top" precisa escalonar pro efeito
-     funcionar, não a altura — antes ela diminuía 64px por item e cada card
-     ficava visualmente menor que o primeiro. */
+     dele visível pra sempre (empilhamento real, sem JS). A altura é a MESMA
+     em todos (--dif-base): só o "top" escalona pro efeito funcionar. */
   .dif-stack{max-width:900px;margin:0 auto;padding:0 24px;position:relative}
+  /* margin-bottom é o que dá tempo de leitura: o item de baixo só começa a
+     "subir por cima" do de cima depois de percorrer essa distância no
+     fluxo normal — sem essa folga, o próximo item já nasce encostado no
+     fim do card de cima e cobre o texto (que fica perto do fundo) quase
+     de imediato. O "top" escalonado abaixo só decide onde cada um trava
+     de vez no final (a pílula) — não afeta esse tempo de leitura. */
   .dif-item{position:sticky;background:var(--dark);display:flex;flex-direction:column;overflow:hidden;
-    height:var(--dif-base)}
-  .dif-stack{--dif-base:min(78vh,560px)}
+    height:var(--dif-base);margin-bottom:320px}
+  .dif-item:last-child{margin-bottom:0}
+  /* O último item trava com top:+192px — se a altura do card não respeitar
+     esse deslocamento, o rodapé dele (onde fica o texto) sai da tela em
+     telas mais baixas, e como o card fica travado (sticky) não tem como
+     rolar até lá. O terceiro termo garante que MESMO o último item sempre
+     termine dentro dos 100vh, com folga de 24px. */
+  .dif-stack{--dif-base:min(78vh,560px,calc(100vh - var(--header-h) - var(--dif-head-h) - 192px - 24px))}
   /* top soma --header-h + --dif-head-h (medido em JS) pra travar sempre
      ABAIXO do header E do título fixo, nunca por baixo deles */
   .dif-item:nth-child(1){top:calc(var(--header-h) + var(--dif-head-h));z-index:11}
@@ -276,9 +290,10 @@
   .flip-back .ph.photo-0802{background:url('assets/foto-0802.jpg') center 40%/cover no-repeat;opacity:.6}
   .flip-back .ph.photo-0902{background:url('assets/foto-0902.jpg') center 30%/cover no-repeat;opacity:.6}
   .flip-back .ph.photo-1402{background:url('assets/foto-1402.jpg') center 35%/cover no-repeat;opacity:.6}
-  .flip-back .binfo{position:relative;z-index:1}
-  .flip-back .bdate{font-size:11px;letter-spacing:.16em;opacity:.8;margin-bottom:8px}
-  .flip-back .bgroup{font-weight:700;font-size:clamp(15px,2.4vw,19px);letter-spacing:-0.01em}
+  .flip-back .binfo{position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+  .flip-back .binfo-campeas{text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  .flip-back .bdate{font-weight:700;font-size:clamp(19.5px,3.12vw,24.7px);letter-spacing:-0.01em}
+  .flip-back .bgroup{font-size:14.3px;letter-spacing:.16em;margin-bottom:8px;opacity:.8}
 
   footer{background:var(--cream);color:var(--cobalt);padding:70px 24px 90px}
   footer .logo{font-weight:700;font-size:34px;letter-spacing:-0.03em}
@@ -288,7 +303,7 @@
 </head>
 <body>
 <header>
-  <img class="logo" src="assets/logo-nosso-branco.avif" alt="Nosso" />
+  <a href="index.html" class="logo-link" aria-label="Ir para a Home"><img class="logo" src="assets/logo-nosso-branco.avif" alt="Nosso" /></a>
   <nav><a href="index.html">Home</a><a href="programacao.html">Programação</a><a href="informacoes.html">Informações</a><a href="ingressos.html">Compre seus ingressos</a></nav>
   <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
@@ -310,7 +325,6 @@
         <div class="vid vid-real"><video src="assets/hero-video-2.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real"><video src="assets/hero-video-3.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real"><video src="assets/hero-video-4.mp4" autoplay loop muted playsinline></video></div>
-        <div class="vid vid-real"><video src="assets/hero-video-5.mp4" autoplay loop muted playsinline></video></div>
       </div>
       <div class="hero-grad"></div>
       <div class="confetti">
@@ -350,17 +364,17 @@
         <div class="lu-panels-viewport" id="luViewport">
           <div class="lu-panels" id="luPanels">
             <div class="lu-panel c1" data-i="0"><div class="ph photo"></div><span class="pidx">001</span>
-              <div class="overlay"><span class="kick">05 FEV</span><span class="name">Ne-Yo</span><span class="support"><span>Ludmilla</span><span>Wesley Safadão</span><span>Alok</span><span>Ferrugem</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">05 FEV</span><span class="name">Ne-Yo</span><span class="support"><span>Ludmilla</span><span>Wesley Safadão</span><span>Alok</span><span>Ferrugem</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
             <div class="lu-panel c2" data-i="1"><div class="ph photo"></div><span class="pidx">002</span>
-              <div class="overlay"><span class="kick">06 FEV</span><span class="name">João Gomes</span><span class="support"><span>Ana Castela</span><span>Israel &amp; Rodolffo</span><span>Solange Almeida</span><span>Zé Felipe</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">06 FEV</span><span class="name">João Gomes</span><span class="support"><span>Ana Castela</span><span>Israel &amp; Rodolffo</span><span>Solange Almeida</span><span>Zé Felipe</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
             <div class="lu-panel c3" data-i="2"><div class="ph photo"></div><span class="pidx">003</span>
-              <div class="overlay"><span class="kick">07 FEV</span><span class="name">Luísa Sonza</span><span class="support"><span>Pabllo Vittar</span><span>MC Cabelinho</span><span>Tasha &amp; Tracie</span><span>Manu Bahtidão</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">07 FEV</span><span class="name">Luísa Sonza</span><span class="support"><span>Pabllo Vittar</span><span>MC Cabelinho</span><span>Tasha &amp; Tracie</span><span>Manu Bahtidão</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
             <div class="lu-panel c4" data-i="3"><div class="ph photo"></div><span class="pidx">004</span>
-              <div class="overlay"><span class="kick">08 FEV</span><span class="name">Pedro Sampaio</span><span class="support"><span>Jorge &amp; Mateus</span><span>Simone Mendes</span><span>Léo Santana</span><span>Gustavo Mioto</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">08 FEV</span><span class="name">Pedro Sampaio</span><span class="support"><span>Jorge &amp; Mateus</span><span>Simone Mendes</span><span>Léo Santana</span><span>Gustavo Mioto</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
             <div class="lu-panel c5" data-i="4"><div class="ph photo"></div><span class="pidx">005</span>
-              <div class="overlay"><span class="kick">09 FEV</span><span class="name">Revelação</span><span class="support"><span>Thiaguinho</span><span>Turma do Pagode</span><span>Belo</span><span>Sorriso Maroto</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">09 FEV</span><span class="name">Revelação</span><span class="support"><span>Thiaguinho</span><span>Turma do Pagode</span><span>Belo</span><span>Sorriso Maroto</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
             <div class="lu-panel c6" data-i="5"><div class="ph photo"></div><span class="pidx">006</span>
-              <div class="overlay"><span class="kick">13 FEV</span><span class="name">Anitta</span><span class="support"><span>Djonga</span><span>Karol Conká</span><span>Pocah</span><span>Iza</span></span><span class="buy-hint">Comprar ingressos</span></div></div>
+              <div class="overlay"><div class="overlay-text"><span class="kick">13 FEV</span><span class="name">Anitta</span><span class="support"><span>Djonga</span><span>Karol Conká</span><span>Pocah</span><span>Iza</span></span><span class="buy-hint">Comprar ingressos</span></div></div></div>
           </div>
         </div>
         <span class="lu-corner l" id="cornerL">+</span>
@@ -423,27 +437,27 @@
     <div class="datas-grid" id="datasGrid">
       <a class="flip-card" href="programacao.html#dia-0502"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">05/02</span><span class="fweek">Sexta-feira</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-0502"></div><div class="binfo"><div class="bdate">05/02 · Sexta</div><div class="bgroup">Grupo de Acesso</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-0502"></div><div class="binfo"><div class="bgroup">Grupo de Acesso</div><div class="bdate">05/02 · Sexta</div></div></div>
       </div></a>
       <a class="flip-card" href="programacao.html#dia-0602"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">06/02</span><span class="fweek">Sábado</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-0602"></div><div class="binfo"><div class="bdate">06/02 · Sábado</div><div class="bgroup">Grupo de Acesso</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-0602"></div><div class="binfo"><div class="bgroup">Grupo de Acesso</div><div class="bdate">06/02 · Sábado</div></div></div>
       </div></a>
       <a class="flip-card" href="programacao.html#dia-0702"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">07/02</span><span class="fweek">Domingo</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-0702"></div><div class="binfo"><div class="bdate">07/02 · Domingo</div><div class="bgroup">Grupo Especial</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-0702"></div><div class="binfo"><div class="bgroup">Grupo Especial</div><div class="bdate">07/02 · Domingo</div></div></div>
       </div></a>
       <a class="flip-card" href="programacao.html#dia-0802"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">08/02</span><span class="fweek">Segunda-feira</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-0802"></div><div class="binfo"><div class="bdate">08/02 · Segunda</div><div class="bgroup">Grupo Especial</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-0802"></div><div class="binfo"><div class="bgroup">Grupo Especial</div><div class="bdate">08/02 · Segunda</div></div></div>
       </div></a>
       <a class="flip-card" href="programacao.html#dia-0902"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">09/02</span><span class="fweek">Terça-feira</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-0902"></div><div class="binfo"><div class="bdate">09/02 · Terça</div><div class="bgroup">Grupo Especial</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-0902"></div><div class="binfo"><div class="bgroup">Grupo Especial</div><div class="bdate">09/02 · Terça</div></div></div>
       </div></a>
       <a class="flip-card" href="programacao.html#dia-1302"><div class="flip-inner">
         <div class="flip-face flip-front"><span class="fdate">13/02</span><span class="fweek">Sábado</span></div>
-        <div class="flip-face flip-back"><div class="ph photo-1402"></div><div class="binfo"><div class="bdate">13/02 · Sábado</div><div class="bgroup">Desfile das Campeãs</div></div></div>
+        <div class="flip-face flip-back"><div class="ph photo-1402"></div><div class="binfo binfo-campeas"><div class="bgroup">Desfile das Campeãs</div><div class="bdate">13/02 · Sábado</div></div></div>
       </div></a>
     </div>
   </section>
@@ -603,6 +617,22 @@
   function measure(){distance=Math.max(0,track.scrollWidth-window.innerWidth);}
   window.addEventListener('resize',measure); window.addEventListener('load',measure); measure();
 
+  /* Em alguns iPhones (tipicamente com Modo de Baixo Consumo ativado) o Safari
+     ignora o atributo "autoplay" mesmo com muted+playsinline — é uma restrição
+     do próprio iOS, não um bug do nosso código, e não dá pra detectar via JS
+     se o Modo de Baixo Consumo está ativo. O contorno padrão: chamar .play()
+     de novo dentro do handler do primeiro toque/scroll do usuário — um play()
+     disparado por gesto real do usuário não é bloqueado por essa restrição
+     (diferente do autoplay automático na carga da página). Como a própria
+     seção pede pra rolar, isso cobre o caso na prática sem precisar de UI. */
+  var heroVideos=Array.prototype.slice.call(track.querySelectorAll('video'));
+  function resumeHeroVideos(){
+    heroVideos.forEach(function(v){ if(v.paused){ v.play().catch(function(){}); } });
+  }
+  ['touchstart','scroll','click'].forEach(function(evt){
+    window.addEventListener(evt, resumeHeroVideos, {passive:true});
+  });
+
   function setWord(w){
     wordEl.innerHTML='';
     w.split('').forEach(function(ch,i){
@@ -616,13 +646,19 @@
   }
   setWord(WORDS[0]);lastWord=0;
 
+  /* Palavras agora giram automaticamente por tempo, independente do scroll
+     (antes trocavam junto com o progresso horizontal do track — com o
+     scroll da seção mais curto isso fazia elas passarem rápido demais). */
+  setInterval(function(){
+    lastWord=(lastWord+1)%WORDS.length;
+    setWord(WORDS[lastWord]);
+  }, 2200);
+
   function heroFrame(){
     var r=heroWrap.getBoundingClientRect();
     var p=clamp(-r.top/(r.height-window.innerHeight));
     track.style.transform='translateX('+(-p*distance)+'px)';
     bar.style.transform='scaleX('+p+')';
-    var idx=Math.min(WORDS.length-1,Math.floor(p*WORDS.length));
-    if(idx!==lastWord){lastWord=idx;setWord(WORDS[idx]);}
   }
 
   /* ---- LINE UP ---- */
@@ -705,10 +741,20 @@
     panels.forEach(function(p,i){
       p.addEventListener('click',function(){
         if(suppressClick){ suppressClick=false; return; } // ignora o clique fantasma que segue um arraste
-        if(i!==active){ setActive(i); return; }
-        // painel já ativo/aberto: clique agora leva pra compra daquele dia
-        window.location.href = 'ingressos.html#tix-' + DATES[i].replace('/', '');
+        if(i!==active) setActive(i);
+        // painel já ativo: clicar nele não faz mais nada — só o botão
+        // "Comprar ingressos" (abaixo) navega, pra evitar clique acidental
+        // ao tocar em qualquer parte do card grande.
       });
+      // Botão de compra: área de clique própria e pequena, com stopPropagation
+      // pra não disparar o listener do painel (que só troca o artista).
+      var buyBtn = p.querySelector('.buy-hint');
+      if(buyBtn){
+        buyBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          window.location.href = 'ingressos.html#tix-' + DATES[i].replace('/', '');
+        });
+      }
     });
 
     var startX=0, dragging=false, moved=false, ratio=0, neighborIdx=-1;

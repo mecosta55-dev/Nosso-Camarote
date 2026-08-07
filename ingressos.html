@@ -22,6 +22,7 @@
   /* Header — mesmo padrão fixo-dark das páginas Programação/Informações */
   header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
     height:var(--header-h);padding:0 24px;background:var(--dark);color:var(--cream)}
+  header .logo-link{display:block;line-height:0}
   header .logo{height:22px;width:auto;display:block}
   header nav{display:flex;gap:22px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase}
   header nav a{color:var(--cream);text-decoration:none;opacity:.85}
@@ -50,7 +51,18 @@
   @media(min-width:641px){.mobile-nav{display:none}}
 
   /* ---------- INTRO ---------- */
-  .tix-intro{padding:calc(var(--header-h) + 70px) 24px 40px;max-width:1200px;margin:0 auto}
+  /* Intro com foto de fundo (logo "NOSSO" + assinatura "Nosso Carnaval") —
+     essa composição é estreita/compacta na horizontal, então um recorte só
+     (já centralizado no texto) funciona bem tanto no mobile quanto no
+     desktop com position:center + cover, sem cortar nem estourar o header. */
+  .tix-intro{position:relative;overflow:hidden;min-height:min(78vh,680px);
+    display:flex;align-items:flex-end;padding:0 24px 48px}
+  .tix-intro-bg{position:absolute;inset:0;
+    background:url('assets/ingressos-bg.jpg') center/cover no-repeat}
+  .tix-intro-scrim{position:absolute;inset:0;
+    background:linear-gradient(to top, var(--dark) 0%, var(--dark) 18%, transparent 38%)}
+  .tix-intro-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%}
+  @media(min-width:641px){ .tix-intro{min-height:min(88vh,880px)} }
   .tix-kick{font-size:12px;letter-spacing:.22em;text-transform:uppercase;opacity:.65;margin-bottom:10px}
   .tix-hero-title{font-weight:700;letter-spacing:-0.03em;font-size:clamp(2.2rem,6vw,4rem);line-height:1.02}
 
@@ -193,7 +205,7 @@
 </head>
 <body>
 <header>
-  <img class="logo" src="assets/logo-nosso-branco.avif" alt="Nosso" />
+  <a href="index.html" class="logo-link" aria-label="Ir para a Home"><img class="logo" src="assets/logo-nosso-branco.avif" alt="Nosso" /></a>
   <nav>
     <a href="index.html">Home</a>
     <a href="programacao.html">Programação</a>
@@ -213,8 +225,12 @@
 
 <main>
   <section class="tix-intro">
-    <p class="tix-kick">carnaval 2027</p>
-    <h1 class="tix-hero-title display">Compre seus ingressos</h1>
+    <div class="tix-intro-bg"></div>
+    <div class="tix-intro-scrim"></div>
+    <div class="tix-intro-content">
+      <p class="tix-kick">carnaval 2027</p>
+      <h1 class="tix-hero-title display">Compre seus ingressos</h1>
+    </div>
   </section>
 
   <div class="tix-wrap">
