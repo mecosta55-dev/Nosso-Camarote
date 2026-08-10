@@ -90,6 +90,10 @@
   .hero-grad{position:absolute;inset:0 auto 0 0;z-index:10;width:55%;pointer-events:none;
     background:linear-gradient(90deg,#0A0A0A 0%,rgba(10,10,10,.85) 50%,rgba(10,10,10,0) 100%)}
   @media(max-width:640px){.hero-grad{width:70%}}
+  /* No mobile o Hero mostra 3 vídeos em vez de 4 — o cálculo de scroll
+     horizontal já lê a largura real do track, então basta esconder o
+     último; não precisa recalcular nada em JS. */
+  @media(max-width:640px){.hero-vid-desktop-only{display:none}}
   .confetti span{position:absolute;border-radius:50%;z-index:10}
   .hero-text{position:absolute;inset:0;z-index:20;display:flex;align-items:center;padding:0 24px;pointer-events:none}
   .hero-text .kick{font-size:clamp(13px,2.6vw,17px);font-weight:500;letter-spacing:.22em}
@@ -325,7 +329,7 @@
         <div class="vid vid-real"><video src="assets/hero-video-1.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real"><video src="assets/hero-video-2.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real"><video src="assets/hero-video-3.mp4" autoplay loop muted playsinline></video></div>
-        <div class="vid vid-real"><video src="assets/hero-video-4.mp4" autoplay loop muted playsinline></video></div>
+        <div class="vid vid-real hero-vid-desktop-only"><video src="assets/hero-video-4.mp4" autoplay loop muted playsinline></video></div>
       </div>
       <div class="hero-grad"></div>
       <div class="confetti">
