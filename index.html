@@ -177,6 +177,13 @@
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .lu-panel .overlay .name{font-weight:700;font-size:clamp(22px,4vw,44px);letter-spacing:-0.02em;color:var(--cream);
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* Tiras estreitas (painel não ativo): a data grande + nome não cabem em
+     90px sem cortar com "...". Nessas tiras mostra só a data, num tamanho
+     que cabe inteiro sem reticências; o nome fica escondido (só aparece
+     no painel aberto). */
+  .lu-panel:not(.active) .overlay .name{display:none}
+  .lu-panel:not(.active) .overlay .kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    opacity:.9;margin-bottom:0;overflow:visible;text-overflow:clip}
   /* Lista de atrações de apoio só no painel aberto — nome+data do headliner já
      ficam sempre visíveis (mesmo tamanho/opacidade em qualquer painel), mas os
      4 nomes de apoio não cabem de forma legível numa tira estreita.
@@ -250,7 +257,11 @@
   .dif-card{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;gap:18px;padding:20px 16px 32px;min-height:0;
     margin-top:12px;border:1px solid rgba(220,219,210,.25);border-radius:24px}
-  .dif-card img{flex:1;width:100%;max-width:520px;min-height:0;object-fit:cover;border-radius:18px}
+  /* overflow:hidden no wrapper (não border-radius direto na <img>) porque
+     border-radius + object-fit numa <img> não recorta de forma confiável
+     no Safari/iOS — funciona no Chrome mas fica com canto reto no iPhone. */
+  .dif-card-img{flex:1;width:100%;max-width:520px;min-height:0;overflow:hidden;border-radius:10px}
+  .dif-card-img img{display:block;width:100%;height:100%;object-fit:contain}
   .dif-card p{flex:0 0 auto;font-size:15px;line-height:1.6;color:var(--cream);opacity:.75;max-width:360px}
 
   /* ---------- GRADE DE DATAS (cartões que flipam ao entrar na tela) ---------- */
@@ -328,7 +339,7 @@
       <div class="hero-track" id="heroTrack">
         <div class="vid vid-real"><video src="assets/hero-video-1.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real"><video src="assets/hero-video-2.mp4" autoplay loop muted playsinline></video></div>
-        <div class="vid vid-real"><video src="assets/hero-video-3.mp4" autoplay loop muted playsinline></video></div>
+        <div class="vid vid-real hero-vid-desktop-only"><video src="assets/hero-video-3.mp4" autoplay loop muted playsinline></video></div>
         <div class="vid vid-real hero-vid-desktop-only"><video src="assets/hero-video-4.mp4" autoplay loop muted playsinline></video></div>
       </div>
       <div class="hero-grad"></div>
@@ -405,28 +416,28 @@
       <div class="dif-item">
         <div class="dif-pill">Open Bar &amp; Food</div>
         <div class="dif-card">
-          <img src="assets/dif-open-bar.avif" alt="Open Bar e Buffet" />
+          <div class="dif-card-img"><img src="assets/dif-open-bar.avif" alt="Open Bar e Buffet" /></div>
           <p>Open bar de bebidas premium e open food com serviço de buffet completo.</p>
         </div>
       </div>
       <div class="dif-item">
         <div class="dif-pill">Localização Setor 10</div>
         <div class="dif-card">
-          <img src="assets/dif-localizacao.avif" alt="Localização Setor 10" />
+          <div class="dif-card-img"><img src="assets/dif-localizacao.avif" alt="Localização Setor 10" /></div>
           <p>Posicionamento privilegiado na Sapucaí.</p>
         </div>
       </div>
       <div class="dif-item">
         <div class="dif-pill">Transfer Exclusivo</div>
         <div class="dif-card">
-          <img src="assets/dif-transfer.avif" alt="Transfer" />
+          <div class="dif-card-img"><img src="assets/dif-transfer.avif" alt="Transfer" /></div>
           <p>Ida e volta do Meeting Point à Sapucaí, incluso no ingresso.</p>
         </div>
       </div>
       <div class="dif-item">
         <div class="dif-pill">Meeting Point</div>
         <div class="dif-card">
-          <img src="assets/dif-meeting-point.avif" alt="Meeting Point" />
+          <div class="dif-card-img"><img src="assets/dif-meeting-point.avif" alt="Meeting Point" /></div>
           <p>Local ainda a ser divulgado — informação será comunicada com antecedência.</p>
         </div>
       </div>
