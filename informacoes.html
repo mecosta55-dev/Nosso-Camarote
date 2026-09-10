@@ -4,18 +4,27 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Nosso Camarote 2027 — Informações</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
+  /* Tipografia da marca: Helvena (títulos/impacto) + Helvetica (corrido/UI,
+     já instalada no sistema) — mesmo par usado nas outras 3 páginas. */
+  @font-face{font-family:'Helvena';font-weight:400;font-style:normal;font-display:swap;
+    src:url('assets/fonts/Helvena-Regular.woff2') format('woff2'),url('assets/fonts/Helvena-Regular.woff') format('woff')}
+  @font-face{font-family:'Helvena';font-weight:500;font-style:normal;font-display:swap;
+    src:url('assets/fonts/Helvena-Medium.woff2') format('woff2'),url('assets/fonts/Helvena-Medium.woff') format('woff')}
+  @font-face{font-family:'Helvena';font-weight:700;font-style:normal;font-display:swap;
+    src:url('assets/fonts/Helvena-Bold.woff2') format('woff2'),url('assets/fonts/Helvena-Bold.woff') format('woff')}
   :root{
     --dark:#0A0A0A; --cream:#DCDBD2; --ink:#2B2B29;
     --cobalt:#203090; --coral:#E04A2C; --lilac:#AEB6E8; --pink:#F0A6BC; --pistache:#C8DCA8;
     --header-h:72px;
+    --font-title:'Helvena',system-ui,sans-serif; --font-body:Helvetica,Arial,system-ui,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{background:var(--dark)}
-  body{font-family:"Space Grotesk",system-ui,sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased}
+  body{font-family:var(--font-body);color:var(--cream);-webkit-font-smoothing:antialiased}
+  /* Títulos/impacto: headings + o número de cada seção (01-06). Kickers
+     (info-kick) ficam de fora — são rótulos, não título. */
+  .display,h1,h2,h3,h4,footer .logo,.info-head .num{font-family:var(--font-title)}
   .display{font-weight:700;letter-spacing:-0.04em;line-height:0.9}
 
   /* Header — página toda dark, sem troca de tema (mesmo padrão da Programação) */
@@ -39,14 +48,19 @@
     header .menu-btn{display:flex}
   }
 
-  .mobile-nav{position:fixed;inset:0;z-index:200;background:var(--cream);color:var(--ink);
+  .mobile-nav{position:fixed;inset:0;z-index:200;background:var(--dark);color:var(--cream);
     display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:26px;
-    padding:24px 32px;transform:translateY(-100%);transition:transform .45s cubic-bezier(.22,1,.36,1)}
+    padding:24px 32px;transform:translateY(-100%);transition:transform .45s cubic-bezier(.22,1,.36,1);
+    overflow:hidden}
+  .mobile-nav::before{content:"";position:absolute;inset:0;z-index:0;
+    background:url('assets/mobile-nav-bg.jpg') center/cover no-repeat}
+  .mobile-nav::after{content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(10,10,10,.55),rgba(10,10,10,.85) 70%,var(--dark))}
   .mobile-nav.open{transform:translateY(0)}
-  .mobile-nav a{color:var(--ink);text-decoration:none;font-weight:700;
+  .mobile-nav a{position:relative;z-index:2;color:var(--cream);text-decoration:none;font-weight:700;
     font-size:clamp(28px,9vw,42px);letter-spacing:-0.02em}
-  .mobile-nav-close{position:absolute;top:20px;right:20px;width:44px;height:44px;
-    background:none;border:none;font-size:34px;line-height:1;color:var(--ink);cursor:pointer}
+  .mobile-nav-close{position:absolute;top:20px;right:20px;z-index:2;width:44px;height:44px;
+    background:none;border:none;font-size:34px;line-height:1;color:var(--cream);cursor:pointer}
   @media(min-width:641px){.mobile-nav{display:none}}
 
   /* ---------- INTRO ---------- */
