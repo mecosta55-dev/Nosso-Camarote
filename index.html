@@ -133,7 +133,16 @@
   .confetti span{position:absolute;border-radius:50%;z-index:10}
   .hero-text{position:absolute;inset:0;z-index:20;display:flex;align-items:center;padding:0 24px;pointer-events:none}
   .hero-text .kick{font-size:clamp(13px,2.6vw,17px);font-weight:500;letter-spacing:.22em}
-  .hero-word{margin-top:10px;font-size:clamp(4rem,17vw,11rem);font-weight:700;letter-spacing:-0.04em}
+  /* white-space:nowrap garante que a palavra NUNCA quebra em duas linhas —
+     cada letra é seu próprio <span> (efeito de revelação, ver setWord() no
+     JS), e sem isso o navegador quebra ENTRE letras como se fossem palavras
+     separadas (dava pra ver "experiê" numa linha e "ncia" na outra no
+     mobile). O tamanho é o mesmo `clamp` de sempre; o JS mede a palavra
+     depois de montá-la e aplica um `scale()` pra encolher só as palavras
+     compridas o suficiente pra caber numa linha só — "nosso"/"energia" etc.
+     continuam no tamanho grande normal. */
+  .hero-word{margin-top:10px;font-size:clamp(4rem,17vw,11rem);font-weight:700;letter-spacing:-0.04em;
+    white-space:nowrap;transform-origin:left center}
   .hero-progress{position:absolute;left:0;right:0;bottom:0;z-index:30;height:3px;background:rgba(32,48,144,.25)}
   .hero-progress i{display:block;height:100%;transform-origin:left;transform:scaleX(0);background:var(--cobalt)}
 
@@ -214,7 +223,7 @@
   .lu-panel .overlay .kick{font-weight:700;font-size:clamp(17.6px,3.2vw,35.2px);letter-spacing:-0.02em;
     text-transform:none;color:var(--cream);opacity:.85;margin-bottom:6px;
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .lu-panel .overlay .name{font-weight:700;font-size:clamp(22px,4vw,44px);letter-spacing:-0.02em;color:var(--cream);
+  .lu-panel .overlay .name{font-weight:700;font-size:clamp(17.6px,3.2vw,35.2px);letter-spacing:-0.02em;color:var(--cream);
     display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   /* Tiras estreitas (painel não ativo): a data grande + nome não cabem em
      90px sem cortar com "...". Nessas tiras mostra só a data, num tamanho
@@ -325,12 +334,21 @@
      que sobra de altura no container `.dif-stack`), SEM atrasar quando o
      Meeting Point trava (isso depende só da altura de tudo ANTES dele, não
      do que vem depois) — ou seja, dá pra separar os dois eventos sem tocar
-     em mais nada. 220px cria uma folga de ~90px de scroll entre "os 3
-     terminaram de sair" e "o Meeting Point travou" (medido, consistente nas
-     3 larguras testadas), suficiente pra não coincidirem mais. Custo: o
-     vazio depois da seção volta a crescer um pouco (~234px→~334px num teste
-     em 768px), mas continua bem menor que o bug original (~650px). */
-  .dif-spacer{height:220px}
+     em mais nada.
+     Fui pra 220px nessa correção — resolveu a bagunça (~90px de folga entre
+     os dois eventos), MAS esticou demais o tempo que o Meeting Point fica
+     sozinho, sem nada do Transfer visível por perto (~205px de scroll disso,
+     contra ~105px antes). O usuário reportou de volta, numa gravação de
+     tela: "o Meeting Point deve colar no Transfer e subirem juntos" — ou
+     seja, o problema virou o oposto: isolamento demais, não bagunça de novo.
+     Reduzido pra 150px — mantém uma folga pequena (~20px, o suficiente pra
+     não coincidir de novo com o release dos outros 3) mas encurta bastante
+     o tempo sozinho do Meeting Point (~135px de scroll), sem reabrir o bug
+     da bagunça. É um equilíbrio, não uma solução perfeita: qualquer valor
+     aqui troca "tempo sozinho" por "risco de coincidência" — 150px foi o
+     ponto escolhido depois de medir os dois lados. Vazio final também
+     encolhe de novo (~334px→~264px num teste em 768px). */
+  .dif-spacer{height:150px}
   /* O último item (Meeting Point) MANTÉM o mesmo margin-bottom dos outros —
      sem isso, a seção terminava assim que ele travava, sem o mesmo tempo de
      leitura/travamento que Open Bar, Localização e Transfer têm. Agora ele
@@ -727,7 +745,7 @@
   })();
 
   /* ---- HERO ---- */
-  var WORDS=["festa","encontro","liberdade","exclusivo","nosso"];
+  var WORDS=["nosso","energia","conexão","experiência"];
   var heroWrap=document.querySelector('.hero-wrap');
   var track=document.getElementById('heroTrack');
   var bar=document.getElementById('heroBar');
@@ -752,6 +770,18 @@
     window.addEventListener(evt, resumeHeroVideos, {passive:true});
   });
 
+  /* Encolhe a palavra (via transform:scale, não mexe no font-size) só o
+     suficiente pra caber numa linha só — scrollWidth reflete o tamanho
+     NATURAL (o transform:scale não afeta layout/medição), então dá pra
+     calcular o fator exato numa conta só, sem precisar tentar valores.
+     Palavras curtas (a maioria) não encolhem nada (scale fica em 1). */
+  function fitWord(){
+    var heroText=document.querySelector('.hero-text');
+    var maxW=heroText.clientWidth-48;
+    var natural=wordEl.scrollWidth;
+    var scale=natural>maxW ? maxW/natural : 1;
+    wordEl.style.transform='scale('+scale+')';
+  }
   function setWord(w){
     wordEl.innerHTML='';
     w.split('').forEach(function(ch,i){
@@ -762,8 +792,10 @@
       mask.appendChild(inner);wordEl.appendChild(mask);
       requestAnimationFrame(function(){requestAnimationFrame(function(){inner.style.transform='translateY(0)';});});
     });
+    fitWord();
   }
   setWord(WORDS[0]);lastWord=0;
+  window.addEventListener('resize', fitWord);
 
   /* Palavras agora giram automaticamente por tempo, independente do scroll
      (antes trocavam junto com o progresso horizontal do track — com o
